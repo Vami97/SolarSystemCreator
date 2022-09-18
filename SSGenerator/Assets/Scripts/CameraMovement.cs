@@ -5,7 +5,7 @@ public class CameraMovement : MonoBehaviour
     private Camera cam;
     private Vector3 dragOrigin;
 
-    private float zoomStep = 1000f, minCamSize = 10f, maxCamSize = 100f;
+    private float zoomStep = 1000f, minCamSize = 10f, maxCamSize = 250f;
 
     private SpriteRenderer mapRenderer;
     private float mapMinX, mapMaxX, mapMinY, mapMaxY;
@@ -42,7 +42,7 @@ public class CameraMovement : MonoBehaviour
         {
             Vector3 difference = dragOrigin - cam.ScreenToWorldPoint(Input.mousePosition);
             cam.transform.position += difference;
-            cam.transform.position = ClampCamera(cam.transform.position);
+            //cam.transform.position = ClampCamera(cam.transform.position);
         }
     }
 
@@ -51,7 +51,7 @@ public class CameraMovement : MonoBehaviour
         //Debug.Log(Input.GetAxis("Mouse ScrollWheel"));
         float newSize = cam.orthographicSize - Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * zoomStep * (cam.orthographicSize/30);
         cam.orthographicSize = Mathf.Clamp(newSize, minCamSize, maxCamSize);
-        cam.transform.position = ClampCamera(cam.transform.position);
+        //cam.transform.position = ClampCamera(cam.transform.position);
     }
 
     private Vector3 ClampCamera(Vector3 targetPosition)
