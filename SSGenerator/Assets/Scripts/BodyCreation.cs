@@ -13,10 +13,12 @@ public class BodyCreation : MonoBehaviour
     [Header("All Bodies")]
     public InputField bodyName;
     public Dropdown bodyType;
+    public Slider bodySpeed;
 
     [Header("Default Settings")]
-    public Dropdown bodySize;
-    public Dropdown bodyColor;
+    public Slider bodySize;
+    public FlexibleColorPicker bodyColor;
+    public Image colorIMG;
     public Slider bodyPosition;
 
     [Header("Sun Settings")]
@@ -45,15 +47,19 @@ public class BodyCreation : MonoBehaviour
 
     private int id = 0;
 
+    private bool orbiting = false;
+
+
     private void Start()
     {
         planets = new List<Body>();
 
         bodyName.onValueChanged.AddListener(UpdateNameInputValue);
         bodyType.onValueChanged.AddListener(UpdateBodyTypeDropdownValue);
+        bodySpeed.onValueChanged.AddListener(UpdateDefaultSliderValue);
         
-        bodySize.onValueChanged.AddListener(UpdateDefaultDropdownValue);
-        bodyColor.onValueChanged.AddListener(UpdateDefaultDropdownValue);
+        bodySize.onValueChanged.AddListener(UpdateDefaultSliderValue);
+        bodyColor.onColorChange.AddListener(UpdateDefaultColorValue);
         bodyPosition.onValueChanged.AddListener(UpdateDefaultSliderValue);
 
         sunClass.onValueChanged.AddListener(UpdateDefaultDropdownValue);
@@ -75,16 +81,16 @@ public class BodyCreation : MonoBehaviour
         newBody = (Instantiate(bodyPrefab) as GameObject).GetComponent<Body>();
 
         //Temporary variable in case the body is a moon, to determine its position
-        Vector3 temp = Vector3.zero; 
+        Body temp = null; 
         int tempID = 0;
 
         if (planets != null && planets.Count > 0)
         {
-            temp = planets[moonPlanet.value].transform.position;
+            temp = planets[moonPlanet.value];
             tempID = int.Parse(planets[moonPlanet.value].name);
         }
 
-        newBody.SetParameters(bodyName.text, bodyType.value, bodySize.value, bodyColor.value, bodyPosition.value, sunClass.value, planetTemp.value, planetComp.value, planetSize.value, planetRings, planetPosition.value, temp, tempID.ToString(), moonType.value, moonPosition.value);
+        newBody.SetParameters(bodyName.text, bodyType.value, bodySize.value, bodySpeed.value, bodyColor.color, bodyPosition.value, sunClass.value, planetTemp.value, planetComp.value, planetSize.value, planetRings, planetPosition.value, temp, tempID.ToString(), moonType.value, moonPosition.value);
         newBody.SetUpVisuals();
     }
 
@@ -103,25 +109,25 @@ public class BodyCreation : MonoBehaviour
         id++;
 
         //Temporary variable in case the body is a moon, to determine its position
-        Vector3 temp = Vector3.zero; ;
+        Body temp = null; 
         int tempID = 0;
 
         if (planets != null && planets.Count > 0){ 
-            temp = planets[moonPlanet.value].transform.position;
+            temp = planets[moonPlanet.value];
             tempID = int.Parse(planets[moonPlanet.value].name);
         }
 
         //Set the parameters for the body based on input
         if (bodyName.text != "")
-            realBody.SetParameters(bodyName.text, bodyType.value, bodySize.value, bodyColor.value, bodyPosition.value, sunClass.value, planetTemp.value, planetComp.value, planetSize.value, planetRings, planetPosition.value, temp, tempID.ToString(), moonType.value, moonPosition.value);
+            realBody.SetParameters(bodyName.text, bodyType.value, bodySize.value, bodySpeed.value, bodyColor.color, bodyPosition.value, sunClass.value, planetTemp.value, planetComp.value, planetSize.value, planetRings, planetPosition.value, temp, tempID.ToString(), moonType.value, moonPosition.value);
         else
-            realBody.SetParameters(bodyType.value, bodySize.value, bodyColor.value, bodyPosition.value, sunClass.value, planetTemp.value, planetComp.value, planetSize.value, planetRings, planetPosition.value, temp, tempID.ToString(), moonType.value, moonPosition.value);
+            realBody.SetParameters(bodyType.value, bodySize.value, bodySpeed.value, bodyColor.color, bodyPosition.value, sunClass.value, planetTemp.value, planetComp.value, planetSize.value, planetRings, planetPosition.value, temp, tempID.ToString(), moonType.value, moonPosition.value);
 
         //Set up the body's visuals so you can see what it looks like
         realBody.SetUpVisuals();
 
         //Add planets to list of planets
-        if(realBody.bType == 2) //if Planet
+        if(realBody.bType == 2 || realBody.bType == 0) //if Planet
         {
             planets.Add(realBody);
 
@@ -132,7 +138,7 @@ public class BodyCreation : MonoBehaviour
         ClickManager.CallCloseAllPanels();
     }
 
-    //NEED TO UPDATE THIS WILL ALL INPUTS
+    //NEED TO UPDATE THIS WITH ALL INPUTS
     public void ResetForm()
     {
         bodyName.text = "";
@@ -178,19 +184,67 @@ public class BodyCreation : MonoBehaviour
         UpdateBody();
     }
 
+    void UpdateDefaultColorValue(Color color)
+    {
+        UpdateBody();
+
+        colorIMG.color = color;
+    }
+
+    //Toggle the color picker panel
+    public void ToggleColorPicker()
+    {
+        GameObject panel = bodyColor.transform.parent.gameObject;
+
+        panel.SetActive(!panel.activeSelf);
+
+        colorIMG.color = bodyColor.color;
+    }
+
+
+    //Toggle Rotate
+    public void ToggleRotate()
+    {
+        orbiting = !orbiting;
+
+        Body[] bodies = FindObjectsOfType<Body>();
+
+        foreach (Body body in bodies)
+        {
+            if (orbiting) { body.StartRotate(); }
+            else { body.PauseRotate(); }
+        }           
+    }
+
+    public void ResetPositions()
+    {
+        if(orbiting)
+        {
+            ToggleRotate();
+        }
+
+        Body[] bodies = FindObjectsOfType<Body>();
+
+        foreach(Body body in bodies)
+        {
+            body.SetUpVisuals();
+        }
+    }
+
+
     void UpdateBody()
     {
         //Temporary variable in case the body is a moon, to determine its position
-        Vector3 temp = Vector3.zero; ;
+        Body temp = null; 
         int tempID = 0;
 
         if (planets != null && planets.Count > 0)
         {
-            temp = planets[moonPlanet.value].transform.position;
+            temp = planets[moonPlanet.value];
             tempID = int.Parse(planets[moonPlanet.value].name);
         }
 
-        newBody?.SetParameters(bodyName.text, bodyType.value, bodySize.value, bodyColor.value, bodyPosition.value, sunClass.value, planetTemp.value, planetComp.value, planetSize.value, planetRings, planetPosition.value, temp, tempID.ToString(), moonType.value, moonPosition.value);
+        newBody?.SetParameters(bodyName.text, bodyType.value, bodySize.value, bodySpeed.value, bodyColor.color, bodyPosition.value, sunClass.value, planetTemp.value, planetComp.value, planetSize.value, planetRings, planetPosition.value, temp, tempID.ToString(), moonType.value, moonPosition.value);
         newBody?.SetUpVisuals();
     }
 }

@@ -116,6 +116,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bName: 
   bType: 0
+  bSpeed: 0
   bSize: 0
-  bColor: 0
+  bColor: {r: 0, g: 0, b: 0, a: 0}
   bLocation: 0
+  sType: 0
+  pTemp: 0
+  pComposition: 0
+  pSize: 0
+  pHasRings: 0
+  pLocation: 0
+  mPlanet: {fileID: 0}
+  mPlanetID: 
+  mType: 0
+  mLocation: 0
+  aDensity: 0
+  aLocation: 0
+  defSprite: {fileID: 21300000, guid: 79972b8bd37394241b5da89b337444fe, type: 3}
+  defPlanetSpritesCool:
+  - {fileID: 21300000, guid: 1ce29a7e3f764ab47a919d9e02de1b5a, type: 3}
+  - {fileID: 21300000, guid: a50309842e387c54082c2365ec71deaa, type: 3}
+  - {fileID: 21300000, guid: ea20adcac858e7148bd31f099af7b55a, type: 3}
+  - {fileID: 21300000, guid: 65601c373bb871d48b016ed2ef235125, type: 3}
+  - {fileID: 21300000, guid: 4f7c02660435a524f95a80ad1e0adafe, type: 3}
+  defPlanetSpritesWarm:
+  - {fileID: 21300000, guid: b1684c1b68ea3024d83c737134cb2a1e, type: 3}
+  - {fileID: 21300000, guid: ae920217ae76cc345a7dc3795507e301, type: 3}
+  - {fileID: 21300000, guid: 500dcba4b5c75b74eb63a28107a19d27, type: 3}
+  - {fileID: 21300000, guid: dfc0e6d56928ef64eba56f1e4fc790f5, type: 3}
+  - {fileID: 21300000, guid: f55e537d29e0e8c4f9b089ea4520e4fb, type: 3}
+  rotate: 0
