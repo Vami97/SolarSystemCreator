@@ -164,9 +164,11 @@ public class Body : MonoBehaviour, IClickable
     public void Click()
     {
         //Temporary
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
 
         //Open edit panel
+        GameObject.FindObjectOfType<BodyModification>().SetBodyToEdit(this);
+        
     }
 
     public void StartRotate()

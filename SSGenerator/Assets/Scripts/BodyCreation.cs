@@ -49,6 +49,7 @@ public class BodyCreation : MonoBehaviour
 
     private bool orbiting = false;
 
+    public List<Body> Planets { get => planets; }
 
     private void Start()
     {
@@ -130,6 +131,7 @@ public class BodyCreation : MonoBehaviour
         if(realBody.bType == 2 || realBody.bType == 0) //if Planet
         {
             planets.Add(realBody);
+            GameObject.FindObjectOfType<BodyModification>().planets.Add(realBody);
 
             //Add planets to moon dropdown
             moonPlanet.options.Add(new Dropdown.OptionData(realBody.bName));
