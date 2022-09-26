@@ -130,6 +130,14 @@ public class BodyCreation : MonoBehaviour
         //Add planets to list of planets
         if(realBody.bType == 2 || realBody.bType == 0) //if Planet
         {
+            if(planets.Count == 0)
+            {
+                Dropdown.OptionData moonOption = new Dropdown.OptionData();
+                moonOption.text = "Moon/Satellite";
+
+                bodyType.options.Add(moonOption);
+            }
+
             planets.Add(realBody);
             GameObject.FindObjectOfType<BodyModification>().planets.Add(realBody);
 
