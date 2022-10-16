@@ -215,6 +215,11 @@ public class BodyModification : MonoBehaviour
             tempID = int.Parse(planets[moonPlanet.value].name);
         }
 
+        if (body.bType == 4) //if Moon
+        {
+            body.SetPlanet();
+        }
+
         body.SetParameters(bodyName.text, body.bType, bodySize.value, bodySpeed.value, bodyColor.color, bodyPosition.value, sunClass.value, planetTemp.value, planetComp.value, planetSize.value, planetRings, planetPosition.value, temp, tempID.ToString(), moonType.value, moonPosition.value);
         body.SetUpVisuals();
     }
@@ -253,6 +258,11 @@ public class BodyModification : MonoBehaviour
         {
             temp = planets[rmPlanet];
             tempID = int.Parse(planets[rmPlanet].name);
+        }
+
+        if (body.bType == 4) //if Moon
+        {
+            body.SetPlanet();
         }
 
         body.SetParameters(rbName, body.bType, rbSize, rbSpeed, rbColor, rbPosition, rsClass, rpTemp, rpComp, rpSize, rpRings, rpPosition, temp, tempID.ToString(), rmType, rmPosition);

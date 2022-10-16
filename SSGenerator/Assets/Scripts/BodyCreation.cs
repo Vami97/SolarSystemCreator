@@ -145,6 +145,11 @@ public class BodyCreation : MonoBehaviour
             moonPlanet.options.Add(new Dropdown.OptionData(realBody.bName));
         }
 
+        if(realBody.bType == 4) //if Moon
+        {
+            realBody.SetPlanet();
+        }
+
         ClickManager.CallCloseAllPanels();
     }
 
@@ -256,5 +261,10 @@ public class BodyCreation : MonoBehaviour
 
         newBody?.SetParameters(bodyName.text, bodyType.value, bodySize.value, bodySpeed.value, bodyColor.color, bodyPosition.value, sunClass.value, planetTemp.value, planetComp.value, planetSize.value, planetRings, planetPosition.value, temp, tempID.ToString(), moonType.value, moonPosition.value);
         newBody?.SetUpVisuals();
+
+        if (newBody?.bType == 4) //if Moon
+        {
+            newBody?.SetPlanet();
+        }
     }
 }

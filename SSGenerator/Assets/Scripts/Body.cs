@@ -167,8 +167,7 @@ public class Body : MonoBehaviour, IClickable
         //gameObject.SetActive(false);
 
         //Open edit panel
-        GameObject.FindObjectOfType<BodyModification>().SetBodyToEdit(this);
-        
+        GameObject.FindObjectOfType<BodyModification>().SetBodyToEdit(this);        
     }
 
     public void StartRotate()
@@ -180,6 +179,12 @@ public class Body : MonoBehaviour, IClickable
     public void PauseRotate()
     {
         rotate = false;
+    }
+
+    public void SetPlanet()
+    {
+        Transform mPTransform = GameObject.Find(mPlanetID).transform;
+        gameObject.transform.parent = mPTransform;
     }
 
     IEnumerator RotateBody()
@@ -200,8 +205,7 @@ public class Body : MonoBehaviour, IClickable
                 case 3:
                     break;
                 case 4:
-                    Transform mPTransform = GameObject.Find(mPlanetID).transform;
-                    gameObject.transform.parent = mPTransform;
+                    SetPlanet();
 
                     Vector3 mPlanetPos = GameObject.Find(mPlanetID).transform.position;
 
