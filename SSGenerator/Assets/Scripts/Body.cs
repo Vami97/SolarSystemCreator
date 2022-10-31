@@ -22,6 +22,7 @@ public class Body : MonoBehaviour, IClickable
     public int pSize; //xSmall, Small, Medium, Large, xLarge, xxLarge (Reverse)
     public bool pHasRings;
     public float pLocation;
+    //public List<Body> satellites; //Which moons it has
 
     //Moon Specific Parameters
     public Body mPlanet; //Planet location
@@ -34,7 +35,7 @@ public class Body : MonoBehaviour, IClickable
     public float aLocation;
 
 
-
+    //START DEFAULTS
     //Defaults
     public static string defName = "No Name";
     public static float[] defSizes = new float[10] { 0.5f, 1f, 1.5f, 2f, 2.5f, 3f, 3.5f, 4f, 4.5f, 5f };
@@ -60,6 +61,10 @@ public class Body : MonoBehaviour, IClickable
     //Moon Specific Defaults
     public static float[] defMoonSizes = new float[6] { 0.2f, 0.4f, 0.6f, 0.1f, 0.2f, 0.4f};
     public static Color32[] defMoonColors = new Color32[6] { Color.magenta, Color.magenta, Color.magenta, Color.gray, Color.gray, Color.white};
+    //END DEFAULTS
+
+
+
 
     public void SetParameters(string _bName, int _bType, float _bSize, float _bSpeed, Color _bColor, float _bLocation, int _sType, int _pTemp, int _pComp, int _pSize, bool _pHasRings, float _pLocation, Body _mPlanet, string _mPlanetID, int _mType, float _mLocation)
     {
@@ -107,17 +112,17 @@ public class Body : MonoBehaviour, IClickable
         mPlanetID = _mPlanetID;
         mType = _mType;
         mLocation = _mLocation;
-    }
+    }    
 
     public void SetUpVisuals()
     {
-        switch(bType)
+        switch (bType)
         {
             case 0: //Default
                 gameObject.transform.position = new Vector3(bLocation, 0f, 0f);
                 gameObject.transform.localScale = new Vector3(bSize, bSize, bSize);
                 gameObject.GetComponent<SpriteRenderer>().color = bColor;
-                gameObject.GetComponent<SpriteRenderer>().sprite = defSprite;
+                gameObject.GetComponent<SpriteRenderer>().sprite = defSprite;              
                 break;
             case 1: //Sun
                 gameObject.transform.position = Vector3.zero;
@@ -140,34 +145,48 @@ public class Body : MonoBehaviour, IClickable
                         break;
                     default:
                         break;
-                }
-
+                }                
                 break;
             case 3: //Asteroid Belt
                 
                 break;
             case 4: //Moon
-                gameObject.transform.position = new Vector3(mPlanet.transform.position.x, mLocation, 0f);
+                SetPlanet();
+                float mPlanetRadius = mPlanet.GetComponent<CircleCollider2D>().radius;
+                //Debug.Log("Radius: " + mPlanetRadius);
 
                 float mPlanetScaleFactor = mPlanet.transform.localScale.x;
-                gameObject.transform.localScale = new Vector3(defMoonSizes[mType] * mPlanetScaleFactor, defMoonSizes[mType] * mPlanetScaleFactor, defMoonSizes[mType] * mPlanetScaleFactor);
+                gameObject.transform.position = new Vector3(mPlanet.transform.position.x, (mPlanetRadius + mLocation/(mPlanetScaleFactor * 3.5f)) * mPlanetScaleFactor, 0f);        
+                gameObject.transform.localScale = new Vector3(defMoonSizes[mType] / mPlanetScaleFactor, defMoonSizes[mType] / mPlanetScaleFactor, defMoonSizes[mType] / mPlanetScaleFactor);
                 gameObject.GetComponent<SpriteRenderer>().color = defMoonColors[mType];
                 gameObject.GetComponent<SpriteRenderer>().sprite = defSprite;
                 break;
             default:
                 break;
         }
+
+        //MODIFY CHILDREN
+        if (transform.childCount > 0)
+        {
+            //Get all moons of the object
+            Body[] moons = gameObject.GetComponentsInChildren<Body>();
+
+            //Check if Object has moons
+            if (moons.Length > 0)
+            {
+                //Set Moon Visuals
+                foreach (Body moon in moons) { if(moon.bType == 4)moon.SetUpVisuals(); }
+            }
+        }
+       
     }
 
     public bool rotate;
 
     public void Click()
     {
-        //Temporary
-        //gameObject.SetActive(false);
-
         //Open edit panel
-        GameObject.FindObjectOfType<BodyModification>().SetBodyToEdit(this);        
+        GameObject.FindObjectOfType<BodyModification>().SetBodyToEdit(this);  
     }
 
     public void StartRotate()
@@ -205,10 +224,7 @@ public class Body : MonoBehaviour, IClickable
                 case 3:
                     break;
                 case 4:
-                    SetPlanet();
-
                     Vector3 mPlanetPos = GameObject.Find(mPlanetID).transform.position;
-
                     gameObject.transform.RotateAround(mPlanetPos, Vector3.back, bSpeed * Time.deltaTime);
                     break;
                 default:
@@ -217,6 +233,40 @@ public class Body : MonoBehaviour, IClickable
 
             
             yield return new WaitForFixedUpdate();
+        }
+    }
+
+    BodyCreation creator; 
+
+    private void Start()
+    {
+        creator = FindObjectOfType<BodyCreation>();
+    }
+
+    public void Delete()
+    {
+        //remove from planet lists
+        BodyTypeReturn.planets.Remove(this);
+
+        Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        //destroy moons
+        DestroyMoons();
+    }
+
+    private void DestroyMoons()
+    {
+        if (bType == 0 || bType == 2)
+        {
+            Body[] moons = gameObject.GetComponentsInChildren<Body>();
+
+            foreach (Body moon in moons)
+            {
+                Destroy(moon.gameObject);
+            }
         }
     }
 }

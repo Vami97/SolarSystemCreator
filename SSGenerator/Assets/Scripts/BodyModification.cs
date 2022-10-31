@@ -7,13 +7,21 @@ using UnityEngine.UI;
 
 public class BodyModification : MonoBehaviour
 {
+    //START PANELS
+    //These are the panels for each type of Body that can be created 
+    //This needs to be edited in the inspector
     [Header("Panels")]
     public GameObject mainEditPanel;
     public GameObject[] panels;
+    //END PANELS
 
+    //START SETTINGS
+    //These are inputs for the body settings
+    //These need to be added in the inspector
+    //Each heading specifies what body type they are for
     [Header("All Bodies")]
-    public InputField bodyName;
-    public Slider bodySpeed;
+    public InputField bodyName; //Name of the Body
+    public Slider bodySpeed; //Speed of body as it rotates around its anchor [Planet around sun | Moon/Satellite around Planet]
 
     [Header("Default Settings")]
     public Slider bodySize;
@@ -60,14 +68,29 @@ public class BodyModification : MonoBehaviour
     int rmType;
     float rmPosition;
 
-    public List<Body> planets;
-
     private bool planetSet = false;
+
+    private void OnEnable()
+    {
+        SetPlanetList();
+    }
+
+    public void SetPlanetList()
+    {
+        if (BodyTypeReturn.planets != null && BodyTypeReturn.planets.Count > 0)
+        {
+            moonPlanet.ClearOptions();
+            foreach (Body planet in BodyTypeReturn.planets)
+            {
+                //Add planets to moon dropdown
+                string moonPlanetID = planet.bName + "#" + (planet.gameObject.name); //Create string to have planet name + #id
+                moonPlanet.options.Add(new Dropdown.OptionData(moonPlanetID)); //Add option to dropdown for body creation panel
+            }
+        }
+    }
 
     private void Start()
     {
-        planets = new List<Body>();
-
         bodyName.onValueChanged.AddListener(UpdateNameInputValue);
         bodySpeed.onValueChanged.AddListener(UpdateDefaultSliderValue);
 
@@ -203,27 +226,37 @@ public class BodyModification : MonoBehaviour
         }       
     }
 
+    public void DeleteBody()
+    {
+        body?.Delete();
+        planetSet = false;
+        SetBodyToEdit(null);
+        ClickManager.CallCloseAllPanels();
+    }
+
     void UpdateBody()
     {
         //Temporary variable in case the body is a moon, to determine its position
         Body temp = null;
         int tempID = 0;
 
-        if (planets != null && planets.Count > 0)
+        if (BodyTypeReturn.planets != null && BodyTypeReturn.planets.Count > 0)
         {
-            temp = planets[moonPlanet.value];
-            tempID = int.Parse(planets[moonPlanet.value].name);
+            temp = BodyTypeReturn.planets[moonPlanet.value];
+            tempID = int.Parse(BodyTypeReturn.planets[moonPlanet.value].name);
         }
 
-        if (body.bType == 4) //if Moon
+        if (body?.bType == 4) //if Moon
         {
-            body.SetPlanet();
+            body?.SetPlanet();
         }
 
-        body.SetParameters(bodyName.text, body.bType, bodySize.value, bodySpeed.value, bodyColor.color, bodyPosition.value, sunClass.value, planetTemp.value, planetComp.value, planetSize.value, planetRings, planetPosition.value, temp, tempID.ToString(), moonType.value, moonPosition.value);
-        body.SetUpVisuals();
+        body?.SetParameters(bodyName.text, body.bType, bodySize.value, bodySpeed.value, bodyColor.color, bodyPosition.value, sunClass.value, planetTemp.value, planetComp.value, planetSize.value, planetRings, planetPosition.value, temp, tempID.ToString(), moonType.value, moonPosition.value);
+        body?.SetUpVisuals();
     }
 
+    //Set edit is called when the user confirms the edit
+    //Set edit sets all the edited options to the correct ones
     public void SetEdit()
     {
         rbName = body.bName;
@@ -248,27 +281,31 @@ public class BodyModification : MonoBehaviour
         ClickManager.CallCloseAllPanels();
     }
 
+    //Complete edit is called when the panel closes
     public void CompleteEdit()
     {
-        //Temporary variable in case the body is a moon, to determine its position
-        Body temp = null;
-        int tempID = 0;
-
-        if (planets != null && planets.Count > 0)
+        if(body != null)
         {
-            temp = planets[rmPlanet];
-            tempID = int.Parse(planets[rmPlanet].name);
-        }
+            //Temporary variable in case the body is a moon, to determine its position
+            Body temp = null;
+            int tempID = 0;
 
-        if (body.bType == 4) //if Moon
-        {
-            body.SetPlanet();
-        }
+            if (BodyTypeReturn.planets != null && BodyTypeReturn.planets.Count > 0)
+            {
+                temp = BodyTypeReturn.planets[rmPlanet];
+                tempID = int.Parse(BodyTypeReturn.planets[rmPlanet].name);
+            }
 
-        body.SetParameters(rbName, body.bType, rbSize, rbSpeed, rbColor, rbPosition, rsClass, rpTemp, rpComp, rpSize, rpRings, rpPosition, temp, tempID.ToString(), rmType, rmPosition);
-        body.SetUpVisuals();
+            if (body.bType == 4) //if Moon
+            {
+                body.SetPlanet();
+            }
 
-        planetSet = false;
-        SetBodyToEdit(null);
+            body.SetParameters(rbName, body.bType, rbSize, rbSpeed, rbColor, rbPosition, rsClass, rpTemp, rpComp, rpSize, rpRings, rpPosition, temp, tempID.ToString(), rmType, rmPosition);
+            body.SetUpVisuals();
+
+            planetSet = false;
+            SetBodyToEdit(null);
+        }      
     }
 }
