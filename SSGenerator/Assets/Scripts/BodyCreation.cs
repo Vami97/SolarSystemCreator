@@ -58,6 +58,7 @@ public class BodyCreation : MonoBehaviour
     //Bool to determine if planets are orbiting or not
     private bool orbiting = false;
 
+    public int Id { get => id; set => id = value; }
 
     private void Start()
     {

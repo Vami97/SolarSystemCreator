@@ -8103,6 +8103,7 @@ GameObject:
   - component: {fileID: 519420029}
   - component: {fileID: 519420033}
   - component: {fileID: 519420034}
+  - component: {fileID: 519420035}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -8198,6 +8199,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d15b15c83a763f64ea5150570d505d04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &519420035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a45ec6f4fc4d2946bb6e448a0a015cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &522526988
@@ -10127,6 +10140,7 @@ GameObject:
   - component: {fileID: 702897910}
   - component: {fileID: 702897909}
   - component: {fileID: 702897913}
+  - component: {fileID: 702897914}
   m_Layer: 5
   m_Name: PNL_Edit
   m_TagString: Untagged
@@ -10239,6 +10253,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bodMod: {fileID: 936464811}
+--- !u!114 &702897914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702897906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0426b0b4308fe34b89c75b5dd2a1b50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainEditPanel: {fileID: 702897906}
+  panels:
+  - {fileID: 1005551108}
+  - {fileID: 1644563478}
+  - {fileID: 41447958}
+  - {fileID: 1453630102}
+  - {fileID: 1547742748}
+  bodyName: {fileID: 417273904}
+  bodySpeed: {fileID: 178900567}
+  bodySize: {fileID: 1312367028}
+  bodyColor: {fileID: 210486074}
+  colorIMG: {fileID: 738714952}
+  bodyPosition: {fileID: 2064834516}
+  sunClass: {fileID: 2137342663}
+  planetTemp: {fileID: 1067838847}
+  planetComp: {fileID: 1973500071}
+  planetSize: {fileID: 802663168}
+  planetRings: {fileID: 973106492}
+  planetPosition: {fileID: 1983284593}
+  moonPlanet: {fileID: 767422901}
+  moonType: {fileID: 740324084}
+  moonPosition: {fileID: 355295507}
 --- !u!1 &703767826
 GameObject:
   m_ObjectHideFlags: 0
@@ -13908,7 +13956,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 936464806}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c0426b0b4308fe34b89c75b5dd2a1b50, type: 3}
   m_Name: 

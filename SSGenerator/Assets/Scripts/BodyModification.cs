@@ -83,7 +83,7 @@ public class BodyModification : MonoBehaviour
             foreach (Body planet in BodyTypeReturn.planets)
             {
                 //Add planets to moon dropdown
-                string moonPlanetID = planet.bName + "#" + (planet.gameObject.name); //Create string to have planet name + #id
+                string moonPlanetID = planet.bName + "#" + (planet.gameObject.name); //Create string to have planet name + #i
                 moonPlanet.options.Add(new Dropdown.OptionData(moonPlanetID)); //Add option to dropdown for body creation panel
             }
         }
